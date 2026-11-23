@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Escape the Lab",
@@ -233,57 +234,84 @@ def puzzle_3():
 
     st.subheader("Chemical Cabinet")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     # -------- BOTTLE A --------
     with col1:
-
         st.markdown("### 🧪 Bottle A")
-        st.markdown("**Hydrochloric acid**")
-        st.code("HCl(aq)")
-
+        st.markdown("**UNKNOWN SOLUTION**")
+        st.caption("Label partially damaged")
+        
         with st.expander("🔎 Inspect"):
+            st.markdown("**IDENTIFICATION: Hydrochloric acid**")
+            st.code("HCl(aq)")
+
             st.write("""
-            Type: Acidic solution
+            **Type:** Acidic solution
 
-            Appearance: Colorless
+            **Appearance:** Colorless
 
-            Chemical behavior:
+            **Chemical behavior:**  
             Strong acid in aqueous solution.
             """)
 
     # -------- BOTTLE B --------
     with col2:
-
         st.markdown("### 🧪 Bottle B")
-        st.markdown("**Sodium hydroxide**")
-        st.code("NaOH(aq)")
+        st.markdown("**UNKNOWN SOLUTION**")
+        st.caption("Label partially damaged")
 
         with st.expander("🔎 Inspect"):
+            st.markdown("**IDENTIFICATION: Sodium hydroxide**")
+            st.code("NaOH(aq)")
+
             st.write("""
-            Type: Basic solution
+            **Type:** Basic solution
 
-            Appearance: Colorless
+            **Appearance:** Colorless
 
-            Chemical behavior:
-            Strong base in aqueous solution.
-            """)
+           **Chemical behavior:**  
+           Strong base in aqueous solution.
+           """)
 
     # -------- BOTTLE C --------
     with col3:
-
         st.markdown("### 🧪 Bottle C")
-        st.markdown("**Phenolphthalein**")
-        st.code("Indicator")
-
+        st.markdown("**UNKNOWN SOLUTION**")
+        st.caption("Label partially damaged")
+        
         with st.expander("🔎 Inspect"):
+            st.markdown("**IDENTIFICATION: Phenolphthalein**")
+            st.code("Acid–base indicator")
+
             st.write("""
-            Type: Acid–base indicator
+            **Type:** Acid–base indicator
 
-            Appearance: Colorless
+            **Appearance:** Colorless
 
-            Chemical behavior:
+            **Chemical behavior:**  
             Its color depends strongly on pH.
+            """)
+
+    # -------- BOTTLE D --------
+    with col4:
+        
+        st.markdown("### 🧪 Bottle D")
+        st.markdown("**UNKNOWN SOLUTION**")
+        st.caption("⚠️ Hazard label intact")
+        
+        with st.expander("🔎 Inspect"):
+            st.markdown("**IDENTIFICATION: Hydrogen peroxide**")
+            st.code("H₂O₂(aq)")
+
+            st.write("""
+            **Type:** Oxidizing agent
+
+            **Appearance:** Colorless
+
+            **Safety information:**  
+            ⚠️ Oxidizer — chemical compatibility
+            must be checked before mixing.
             """)
 
     st.divider()
@@ -292,12 +320,12 @@ def puzzle_3():
 
     reagent_1 = st.selectbox(
         "First reagent",
-        ["Bottle A", "Bottle B", "Bottle C"]
+        ["Bottle A", "Bottle B", "Bottle C", "Bottle D"]
     )
 
     reagent_2 = st.selectbox(
         "Second reagent",
-        ["Bottle A", "Bottle B", "Bottle C"],
+        ["Bottle A", "Bottle B", "Bottle C","Bottle D"],
         index=1
     )
 
@@ -310,6 +338,139 @@ def puzzle_3():
             st.warning("""
             ⚠️ Select two different reagents.
             """)
+
+        elif "Bottle D" in selected:
+
+                        components.html(
+                """
+                <style>
+
+                body {
+                    margin: 0;
+                    background: transparent;
+                    overflow: hidden;
+                    font-family: Arial, sans-serif;
+                }
+
+                @keyframes explosion {
+                    0% {
+                        transform: scale(0);
+                        opacity: 0;
+                    }
+
+                    20% {
+                        transform: scale(0.5);
+                        opacity: 1;
+                    }
+
+                    45% {
+                        transform: scale(3);
+                        opacity: 1;
+                    }
+
+                    65% {
+                        transform: scale(1.8);
+                    }
+
+                    100% {
+                        transform: scale(1);
+                    }
+                }
+
+                @keyframes shake {
+                    0% { transform: translateX(0); }
+                    10% { transform: translateX(-15px); }
+                    20% { transform: translateX(15px); }
+                    30% { transform: translateX(-15px); }
+                    40% { transform: translateX(15px); }
+                    50% { transform: translateX(-8px); }
+                    60% { transform: translateX(8px); }
+                    100% { transform: translateX(0); }
+                }
+
+                @keyframes smoke {
+                    0% {
+                        opacity: 0;
+                        transform: translateY(25px) scale(0.5);
+                    }
+
+                    60% {
+                        opacity: 0;
+                    }
+
+                    100% {
+                        opacity: 1;
+                        transform: translateY(-5px) scale(1);
+                    }
+                }
+
+                @keyframes warning {
+                    0%, 100% {
+                        opacity: 1;
+                    }
+
+                    50% {
+                        opacity: 0.25;
+                    }
+                }
+
+                .explosion-box {
+                    text-align: center;
+                    padding: 20px;
+                    animation: shake 0.8s ease-in-out;
+                }
+
+                .boom {
+                    font-size: 90px;
+                    line-height: 1.2;
+                    animation: explosion 1s ease-out;
+                }
+
+                .warning-text {
+                    margin-top: 10px;
+                    font-size: 20px;
+                    font-weight: bold;
+                    color: #ff4b4b;
+                    animation: warning 0.5s 3;
+                }
+
+                .smoke {
+                    margin-top: 10px;
+                    font-size: 40px;
+                    animation: smoke 1.8s ease-out;
+                }
+
+                .message {
+                    margin-top: 15px;
+                    font-size: 16px;
+                }
+
+                </style>
+
+                <div class="explosion-box">
+
+                    <div class="boom">
+                        💥
+                    </div>
+
+                    <div class="warning-text">
+                        🚨 CHEMICAL INCOMPATIBILITY DETECTED 🚨
+                    </div>
+
+                    <div class="smoke">
+                        ☁️ ☁️ ☁️
+                    </div>
+
+                    <div class="message">
+                        Emergency safety system activated.
+                        <br><br>
+                        <b>That was definitely not the calibration solution.</b>
+                    </div>
+
+                </div>
+                """,
+                height=330
+            )
 
         elif selected == {"Bottle B", "Bottle C"}:
 

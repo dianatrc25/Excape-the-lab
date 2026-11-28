@@ -22,6 +22,13 @@ if "puzzle_2_solved" not in st.session_state:
 
 if "puzzle_3_solved" not in st.session_state:
     st.session_state.puzzle_3_solved = False
+
+if "puzzle_4_attempts" not in st.session_state:
+    st.session_state.puzzle_4_attempts = 0
+
+if "puzzle_4_solved" not in st.session_state:
+    st.session_state.puzzle_4_solved = False
+
 # ---------------------------
 # INTRO
 # ---------------------------
@@ -210,6 +217,146 @@ def puzzle_2():
 # PUZZLE 3 — CHEMICAL STORAGE
 # ---------------------------
 
+def pink_animation():
+
+    components.html(
+        """
+        <style>
+
+        body {
+            margin: 0;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        @keyframes fillPink {
+            0%, 25% {
+                background-color: rgba(245,245,245,0.5);
+            }
+
+            100% {
+                background-color: #ff69b4;
+            }
+        }
+
+        @keyframes bubble {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-55px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes reveal {
+            0%, 70% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .experiment {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .beaker {
+            position: relative;
+            width: 110px;
+            height: 125px;
+            margin: 10px auto 15px auto;
+            border-left: 4px solid #777;
+            border-right: 4px solid #777;
+            border-bottom: 4px solid #777;
+            border-radius: 0 0 18px 18px;
+            overflow: hidden;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            animation: fillPink 2.5s forwards;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: 15px;
+            width: 10px;
+            height: 10px;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: bubble 1.4s infinite;
+        }
+
+        .b1 {
+            left: 25px;
+            animation-delay: 0.1s;
+        }
+
+        .b2 {
+            left: 52px;
+            animation-delay: 0.5s;
+        }
+
+        .b3 {
+            left: 75px;
+            animation-delay: 0.9s;
+        }
+
+        .result {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e83e8c;
+            animation: reveal 3s forwards;
+        }
+
+        .sensor {
+            margin-top: 8px;
+            font-size: 16px;
+            animation: reveal 3.5s forwards;
+        }
+
+        </style>
+
+        <div class="experiment">
+
+            <div class="beaker">
+
+                <div class="liquid"></div>
+
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+
+            </div>
+
+            <div class="result">
+                🩷 PINK COLOR DETECTED
+            </div>
+
+            <div class="sensor">
+                ✓ Optical sensor calibrated
+            </div>
+
+        </div>
+        """,
+        height=240
+    )
+
+
 def puzzle_3():
 
     st.title("🧪 CHEMICAL STORAGE")
@@ -329,9 +476,11 @@ def puzzle_3():
         index=1
     )
 
+
+    selected = {reagent_1, reagent_2}
+
     if st.button("🧪 MIX SELECTED REAGENTS", use_container_width=True):
 
-        selected = {reagent_1, reagent_2}
 
         if reagent_1 == reagent_2:
 
@@ -472,11 +621,14 @@ def puzzle_3():
                 height=330
             )
 
-        elif selected == {"Bottle B", "Bottle C"}:
+    elif selected == {"Bottle B", "Bottle C"}:
+
+            pink_animation()
 
             st.session_state.puzzle_3_solved = True
 
-        elif selected == {"Bottle A", "Bottle C"}:
+
+    elif selected == {"Bottle A", "Bottle C"}:
 
             st.info("""
             ⚪ NO COLOR CHANGE DETECTED
@@ -486,7 +638,7 @@ def puzzle_3():
             Optical sensor calibration failed.
             """)
 
-        elif selected == {"Bottle A", "Bottle B"}:
+    elif selected == {"Bottle A", "Bottle B"}:
 
             st.warning("""
             🌡️ TEMPERATURE CHANGE DETECTED
@@ -517,6 +669,506 @@ def puzzle_3():
             st.rerun()
 
 # ---------------------------
+# PUZZLE 4 — MAGNETIC LOCK
+# ---------------------------
+
+def puzzle_4():
+
+    st.title("🧲 MAGNETIC LOCK")
+
+    st.error("⚠️ SYSTEM 04 — MAGNETIC SECURITY ARRAY OFFLINE")
+
+    st.write("""
+    The final security lock is controlled by a triangular
+    arrangement of magnetic moments.
+
+    The interactions between neighboring spins are
+    **antiferromagnetic**.
+
+    The system attempts to align every neighboring pair
+    in opposite directions.
+    """)
+
+    st.info("""
+    🎯 **MISSION**
+
+    Determine the orientation of the third spin
+    that satisfies the magnetic interactions.
+    """)
+
+    st.subheader("Magnetic Array")
+
+    components.html(
+        """
+        <style>
+
+        body {
+            margin: 0;
+            background: transparent;
+            font-family: Arial, sans-serif;
+        }
+
+        .triangle-container {
+            position: relative;
+            width: 320px;
+            height: 230px;
+            margin: 0 auto;
+        }
+
+        .triangle {
+            position: absolute;
+            left: 60px;
+            top: 25px;
+            width: 200px;
+            height: 170px;
+        }
+
+        .line {
+            position: absolute;
+            height: 4px;
+            background: #666;
+            transform-origin: left center;
+            border-radius: 3px;
+        }
+
+        .left-line {
+            width: 175px;
+            left: 100px;
+            top: 20px;
+            transform: rotate(120deg);
+        }
+
+        .right-line {
+            width: 175px;
+            left: 100px;
+            top: 20px;
+            transform: rotate(60deg);
+        }
+
+        .bottom-line {
+            width: 175px;
+            left: 13px;
+            top: 170px;
+        }
+
+        .spin {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .top-spin {
+            left: 137px;
+            top: 0px;
+        }
+
+        .left-spin {
+            left: 35px;
+            top: 155px;
+        }
+
+        .unknown-spin {
+            right: 28px;
+            top: 155px;
+            font-size: 44px;
+        }
+
+        .label {
+            position: absolute;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .interaction {
+            bottom: 0px;
+            width: 100%;
+            text-align: center;
+        }
+
+        </style>
+
+        <div class="triangle-container">
+
+            <div class="triangle">
+
+                <div class="line left-line"></div>
+                <div class="line right-line"></div>
+                <div class="line bottom-line"></div>
+
+            </div>
+
+            <div class="spin top-spin">↑</div>
+
+            <div class="spin left-spin">↓</div>
+
+            <div class="spin unknown-spin">?</div>
+
+            <div class="label interaction">
+                Antiferromagnetic interactions
+            </div>
+
+        </div>
+        """,
+        height=260
+    )
+
+    st.write("""
+    Two spins are already fixed.
+
+    Select the orientation of the final spin:
+    """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        if st.button(
+            "⬆️ SPIN UP",
+            use_container_width=True
+        ):
+
+            st.session_state.puzzle_4_attempts += 1
+
+            st.warning("""
+            ⚠️ INTERACTION CONFLICT
+
+            One neighboring interaction is satisfied,
+            but another is not.
+
+            The magnetic array remains unstable.
+            """)
+
+    with col2:
+
+        if st.button(
+            "⬇️ SPIN DOWN",
+            use_container_width=True
+        ):
+
+            st.session_state.puzzle_4_attempts += 1
+
+            st.warning("""
+            ⚠️ INTERACTION CONFLICT
+
+            One neighboring interaction is satisfied,
+            but another is not.
+
+            The magnetic array remains unstable.
+            """)
+
+    if st.session_state.puzzle_4_attempts >= 2:
+
+        st.divider()
+
+        st.error("""
+        🚨 NO SPIN ORIENTATION SATISFIES ALL INTERACTIONS
+
+        The security system cannot find a stable configuration.
+        """)
+
+        st.write("""
+        Something else is happening in this triangular magnetic system...
+        """)
+
+        explanation = st.radio(
+            "Identify the phenomenon:",
+            [
+                "Ferromagnetism",
+                "Magnetic frustration",
+                "Diamagnetism"
+            ],
+            index=None
+        )
+
+        if st.button(
+            "SUBMIT DIAGNOSIS",
+            use_container_width=True
+        ):
+
+            if explanation == "Magnetic frustration":
+
+                st.session_state.puzzle_4_solved = True
+
+            elif explanation is None:
+
+                st.warning("Select a diagnosis first.")
+
+            else:
+
+                st.error("""
+                ❌ INCORRECT DIAGNOSIS
+
+                Examine the competing interactions again.
+                """)
+
+    if st.session_state.puzzle_4_solved:
+
+        st.success("🧲 MAGNETIC FRUSTRATION DETECTED")
+
+        st.write("""
+        The triangular geometry prevents all
+        antiferromagnetic interactions from being
+        satisfied simultaneously.
+
+        **MAGNETIC SECURITY ARRAY RESTORED.**
+
+        **FINAL DIGIT RECOVERED: 9**
+        """)
+
+        st.info("""
+        🔐 EMERGENCY CODE COMPLETE
+
+        **4 — 1 — 6 — 9**
+        """)
+
+        if st.button(
+            "GO TO EMERGENCY EXIT ➜",
+            use_container_width=True
+        ):
+            st.session_state.stage = 5
+            st.rerun()
+
+# ---------------------------
+# FINAL STAGE — EMERGENCY EXIT
+# ---------------------------
+def escape_animation():
+
+    components.html(
+        """
+        <style>
+
+        body {
+            margin: 0;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        @keyframes unlock {
+            0%, 25% {
+                opacity: 1;
+            }
+            30%, 100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes unlocked {
+            0%, 30% {
+                opacity: 0;
+            }
+            40%, 100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes openDoor {
+            0%, 40% {
+                transform: perspective(600px) rotateY(0deg);
+            }
+
+            100% {
+                transform: perspective(600px) rotateY(-70deg);
+            }
+        }
+
+        @keyframes reveal {
+            0%, 70% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exit-scene {
+            padding: 15px;
+        }
+
+        .status {
+            position: relative;
+            height: 35px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .locked {
+            position: absolute;
+            width: 100%;
+            color: #d9534f;
+            animation: unlock 3s forwards;
+        }
+
+        .unlocked {
+            position: absolute;
+            width: 100%;
+            color: #28a745;
+            opacity: 0;
+            animation: unlocked 3s forwards;
+        }
+
+        .door-frame {
+            position: relative;
+            width: 150px;
+            height: 210px;
+            margin: 10px auto 20px auto;
+            border: 7px solid #555;
+            background: #fff6c7;
+            perspective: 600px;
+        }
+
+        .door {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #555;
+            transform-origin: left center;
+            animation: openDoor 3.5s forwards;
+        }
+
+        .handle {
+            position: absolute;
+            right: 15px;
+            top: 100px;
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 50%;
+        }
+
+        .victory {
+            font-size: 28px;
+            font-weight: bold;
+            animation: reveal 4s forwards;
+        }
+
+        .message {
+            margin-top: 8px;
+            font-size: 17px;
+            animation: reveal 4.5s forwards;
+        }
+
+        </style>
+
+        <div class="exit-scene">
+
+            <div class="status">
+
+                <div class="locked">
+                    🔒 ACCESS CODE PROCESSING...
+                </div>
+
+                <div class="unlocked">
+                    🔓 ACCESS GRANTED — DOOR UNLOCKED
+                </div>
+
+            </div>
+
+            <div class="door-frame">
+
+                <div class="door">
+                    <div class="handle"></div>
+                </div>
+
+            </div>
+
+            <div class="victory">
+                🧪 YOU ESCAPED THE LAB!
+            </div>
+
+            <div class="message">
+                All emergency systems restored.
+            </div>
+
+        </div>
+        """,
+        height=390
+    )
+
+def puzzle_5():
+
+    st.title("🚪 EMERGENCY EXIT")
+
+    st.error("🚨 FINAL SECURITY LOCK")
+
+    st.write("""
+    All laboratory systems have been restored.
+
+    The emergency exit is now responding, but the door
+    remains electronically locked.
+
+    Enter the four-digit emergency code recovered
+    throughout the laboratory.
+    """)
+
+    st.info("""
+    🔐 **EMERGENCY OVERRIDE**
+
+    Enter the recovered access code below.
+    """)
+
+    code = st.text_input(
+        "Emergency code",
+        max_chars=4,
+        placeholder="_ _ _ _"
+    )
+
+    if st.button(
+        "🔓 UNLOCK LAB",
+        use_container_width=True
+    ):
+
+        if code.strip() == "4169":
+
+            st.session_state.stage = 6
+            st.rerun()
+
+        else:
+
+            st.error("""
+            ❌ ACCESS CODE REJECTED
+
+            Emergency exit remains locked.
+            """)
+
+def victory_screen():
+
+    st.title("🔓 LABORATORY UNLOCKED")
+
+    escape_animation()
+
+    st.success("MISSION COMPLETE")
+
+    st.write("""
+    **Laboratory systems status**
+
+    🔐 Security terminal — RESTORED  
+    🔥 Furnace control — RESTORED  
+    🧪 Emergency ventilation — RESTORED  
+    🧲 Magnetic security array — RESTORED  
+    🚪 Emergency exit — UNLOCKED
+    """)
+
+    st.divider()
+
+    st.subheader("🎉 Congratulations!")
+
+    st.write("""
+    You successfully recovered all four security digits
+    and escaped the laboratory.
+    """)
+
+    st.caption(
+        "Explosions caused during escape: classified information. 💥"
+    )
+
+    st.balloons()
+# ---------------------------
 # GAME CONTROLLER
 # ---------------------------
 
@@ -532,3 +1184,11 @@ elif st.session_state.stage == 2:
 elif st.session_state.stage == 3:
     puzzle_3()
 
+elif st.session_state.stage == 4:
+    puzzle_4()
+
+elif st.session_state.stage == 5:
+    puzzle_5()
+
+elif st.session_state.stage == 6:
+    victory_screen()
